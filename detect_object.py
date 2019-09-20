@@ -3,7 +3,7 @@ import math
 import cv2
 import matplotlib.pyplot as plt
 
-image=cv2.imread('/home/farman/Downloads/object1.jpg')
+image=cv2.imread('/home/farman/Desktop/demo.jpeg')
 #image=cv2.imread('/home/farman/Documents/my-FYP/CALIB/confirmed/IMG_20190224_140532.jpg')
 imgcopy=np.copy(image)
 imgcopy1=np.copy(image)
@@ -121,4 +121,7 @@ my_file.write("%d, %d\n" % ( int((bl-bu)/(au-al)), int( (bl-bu)*al/(au-al)+bl ))
 my_file.write("%d, %d\n" % ( int((br-bu)/(au-ar)), int( (br-bu)*ar/(au-ar)+br )) )
 my_file.write("%d, %d\n" % ( int((bl-bb)/(ab-al)), int( (bl-bb)*al/(ab-al)+bl )) )
 my_file.write("%d, %d\n" % ( int((br-bb)/(ab-ar)), int( (br-bb)*ar/(ab-ar)+br )) )
+
+
+
 my_file.close()
