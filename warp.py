@@ -3,7 +3,7 @@ import cv2
 import glob
 import matplotlib.pyplot as plt
 
-original_image=cv2.imread('/home/farman/Downloads/object1.jpg')
+original_image=cv2.imread('/home/farman/Desktop/demo.jpeg')
 
 ymax, xmax, _ =original_image.shape
 
