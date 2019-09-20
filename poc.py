@@ -6,12 +6,13 @@ import matplotlib.pyplot as plt
 #read input image and find it's edges
 #original_image=cv2.imread('/home/farman/Downloads/IMG_20190224_162113.jpg')
 #original_image=cv2.imread('/home/farman/Downloads/IMG_20190207_013347.jpg')
-#original_image=cv2.imread('/home/farman/Downloads/object1.jpg')
+original_image=cv2.imread('/home/farman/Documents/my-FYP/warpresult.png')
 imgcopy=np.copy(original_image)
 imgcopy2=np.copy(original_image)
 imgcopy3=np.copy(original_image)
 imgcopy4=np.copy(original_image)
 imgcopy5=np.copy(original_image)
+imgcopy6=np.copy(original_image)
 gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
 image_blur=cv2.GaussianBlur(gray,(5,5),0)
 
@@ -62,17 +63,17 @@ if lines is not None:
 					#print(x)
 					#print(a, b)
 					if (0<=(-b/a) and (-b/a)<=xmax) and ( 0<=((ymax-b)/a) and ((ymax-b)/a<=xmax) ):		#u-l
-						cv2.line(imgcopy2, (int(-b/a), 0), (int((ymax-b)/a), ymax), (255,25,10), 2)
+						cv2.line(imgcopy2, (int(-b/a), 0), (int((ymax-b)/a), ymax), (255,25,10), 1)
 						x, y = [], []
 						j=0
 						ux.append(-b/a), lx.append((ymax-b)/a)
 					if ((0<=b) and (b<=ymax)) and ( 0<=(a*xmax+b) and (a*xmax+b)<=ymax ):			#le-r
-						cv2.line(imgcopy2, (0, int(b)), (xmax, int(a*xmax+b)), (55,25,210), 2)
+						cv2.line(imgcopy2, (0, int(b)), (xmax, int(a*xmax+b)), (55,25,210), 1)
 						x, y = [], []
 						j=0
 						ley.append(b), ry.append(a*xmax+b)
 					if ((0<=b) and (b<=ymax)) and ( 0<=((ymax-b)/a) and ((ymax-b)/a<=xmax) ):		#le-l
-						cv2.line(imgcopy2, (0, int(b)),  (int((ymax-b)/a), ymax), (255,25,10), 2)
+						cv2.line(imgcopy2, (0, int(b)),  (int((ymax-b)/a), ymax), (255,25,10), 1)
 						x, y = [], []
 						j=0
 						ux.append(b), lx.append((ymax-b)/a)
@@ -97,7 +98,7 @@ for i in range(len(ux)-1):
 	if abs(ux[i] - ux[i+1]) < 0.005*xmax:
 		ux[i+1]= (ux[i] + ux[i+1])/2
 for i in range(len(uxn)):
-	cv2.line(imgcopy4, (int(uxn[i]), 0), (int(lxn[i]), ymax), (255,25,10), 3)
+	cv2.line(imgcopy4, (int(uxn[i]), 0), (int(lxn[i]), ymax), (255,25,10), 1)
 ######################################
 ley=list(set(ley))
 ry=list(set(ry))
@@ -118,167 +119,29 @@ for i in range(len(ry)-1):
 	if abs(ry[i] - ry[i+1]) < 0.005*ymax:
 		ry[i+1]= (ry[i] + ry[i+1])/2
 for i in range(len(ryn)):
-	cv2.line(imgcopy4, (0, int(leyn[i])), (xmax, int(ryn[i])), (55,25,210), 3)
+	cv2.line(imgcopy4, (0, int(leyn[i])), (xmax, int(ryn[i])), (55,25,210), 1)
 plt.imshow(imgcopy4), plt.title('Averaged Chessboard lines elongated throughout the image'), plt.show()
-##############################################
-i=0
-minn=uxn[len(uxn)-1]-uxn[0]
-for i in range(len(uxn) - 3):
-	u1=uxn[i+1] - uxn[i]
-	u2=uxn[i+2] - uxn[i+1]
-	nu=uxn[i+2] + u2/ (3 - 4*u2/(u2+u1) )
-	if minn > abs(uxn[i+3] - nu):
-		minn = abs(uxn[i+3] - nu)
-		index=i
-print('the lowest error for upper side', minn)
-i=0
-xu=uxn[index+1] - uxn[index]
-yu=uxn[index+2] - uxn[index+1]
-zu=yu/( 3- 4*yu/(xu+yu) )
-u3=uxn[index+2]
-UN=[uxn[index], uxn[index+1], uxn[index+2] ]
-for i in range(15):
-	xu=yu
-	yu=zu
-	u3=u3 + zu
-	UN.append(u3)
-	zu=yu/( 3- 4*yu/(xu+yu) )
+###############################################################################################
+avele=(leyn[len(leyn)-1]-leyn[0])/(len(leyn)-1)
+aver=(ryn[len(ryn)-1]-ryn[0])/(len(ryn)-1)
 
-i=0
-yu=uxn[index+1] - uxn[index]
-zu=uxn[index+2] - uxn[index+1]
-xu=yu/( 3- 4*yu/(zu+yu) )
-u0=uxn[index]
-for i in range(15):
-	zu=yu
-	yu=xu
-	u0=u0 - xu
-	UN.insert(0, u0)
-	xu=yu/( 3- 4*yu/(zu+yu) )
-#print('uuuuuuuuuuuuuuuuuuuu', UN)
-#|||||||||||||||||||||||||||||||||||||||||||
-i=0
-minn=lxn[len(lxn)-1]-lxn[0]
-for i in range(len(lxn) - 3):
-	l1=lxn[i+1] - lxn[i]
-	l2=lxn[i+2] - lxn[i+1]
-	nl=lxn[i+2] + l2/ (3 - 4*l2/(l2+l1) )
-	if minn > abs(lxn[i+3] - nl):
-		minn = abs(lxn[i+3] - nl)
-		index1=i
-print('the lowest error for lower side', minn)
-i=0
-xl=lxn[index1+1] - lxn[index1]
-yl=lxn[index1+2] - lxn[index1+1]
-zl=yl/( 3- 4*yl/(xl+yl) )
-l3=lxn[index1+2]
-LN=[lxn[index1], lxn[index1+1], lxn[index1+2] ]
-for i in range(15):
-	xl=yl
-	yl=zl
-	l3=l3 + zl
-	LN.append(l3)
-	zl=yl/( 3- 4*yl/(xl+yl) )
-i=0
-yl=lxn[index1+1] - lxn[index1]
-zl=lxn[index1+2] - lxn[index1+1]
-xl=yl/( 3- 4*yl/(zl+yl) )
-l0=lxn[index1]
-for i in range(15):
-	zl=yl
-	yl=xl
-	l0=l0 - xl
-	LN.insert(0, l0)
-	xl=yl/( 3- 4*yl/(zl+yl) )
+for i in range(10):
+	cv2.line(imgcopy4, (0, int(leyn[0]-avele*i)), (1000, int(ryn[0]-aver*i)), (55,25,210), 3)
+	cv2.line(imgcopy4, (0, int(leyn[len(leyn)-1]+avele*i)), (1000, int(ryn[len(ryn)-1]+aver*i)), (55,25,210), 3)
 
-#print('llllllllllllllllllllllll', LN)
-A=index-index1
-i=0
-if A>0:
-	for i in range(30):
-		cv2.line(imgcopy5, (int(UN[i]-10), 0), (int(LN[i+A]), ymax), (255,25,10), 3)
-else:
-	for i in range(30):
-		cv2.line(imgcopy5, (int(UN[i-A]-10), 0), (int(LN[i]), ymax), (255,25,10), 3)
-plt.imshow(imgcopy5), plt.title(''), plt.show()
-############################################################
-i=0
-minn=leyn[len(leyn)-1]-leyn[0]
-for i in range(len(leyn) - 3):
-	u1=leyn[i+1] - leyn[i]
-	u2=leyn[i+2] - leyn[i+1]
-	nu=leyn[i+2] + u2/ (3 - 4*u2/(u2+u1) )
-	if minn > abs(leyn[i+3] - nu):
-		minn = abs(leyn[i+3] - nu)
-		index=i
-print('the lowest error for left side', minn)
-i=0
-xu=leyn[index+1] - leyn[index]
-yu=leyn[index+2] - leyn[index+1]
-zu=yu/( 3- 4*yu/(xu+yu) )
-u3=leyn[index+2]
-LE=[leyn[index], leyn[index+1], leyn[index+2] ]
-for i in range(15):
-	xu=yu
-	yu=zu
-	u3=u3 + zu
-	LE.append(u3)
-	zu=yu/( 3- 4*yu/(xu+yu) )
+aveu=(uxn[len(uxn)-1]-uxn[0])/(len(uxn)-1)
+avel=(lxn[len(lxn)-1]-lxn[0])/(len(lxn)-1)
+for i in range(10):
+	cv2.line(imgcopy4, (int(uxn[0]-aveu*i), 0), (int(lxn[0]-avel*i), ymax), (255,25,10), 3)
+	cv2.line(imgcopy4, (int(uxn[len(uxn)-1]+aveu*i), 0), (int(lxn[len(lxn)-1]+avel*i), ymax), (255,25,10), 3)
+plt.imshow(imgcopy4), plt.title('Chessboard lines are spreaded over the entire image'), plt.show()
 
-i=0
-yu=leyn[index+1] - leyn[index]
-zu=leyn[index+2] - leyn[index+1]
-xu=yu/( 3- 4*yu/(zu+yu) )
-u0=leyn[index]
-for i in range(25):
-	zu=yu
-	yu=xu
-	u0=u0 - xu
-	LE.insert(0, u0)
-	xu=yu/( 3- 4*yu/(zu+yu) )
-#print('LEFTTTTTTTTTTTTTTTTTTTTTTTTTTT', LE)
-#|||||||||||||||||||||||||||||||||||||||||||
-i=0
-minn=ryn[len(ryn)-1]-ryn[0]
-for i in range(len(ryn) - 3):
-	l1=ryn[i+1] - ryn[i]
-	l2=ryn[i+2] - ryn[i+1]
-	nl=ryn[i+2] + l2/ (3 - 4*l2/(l2+l1) )
-	if minn > abs(ryn[i+3] - nl):
-		minn = abs(ryn[i+3] - nl)
-		index1=i
-print('the lowest error for right side', minn)
-i=0
-xl=ryn[index1+1] - ryn[index1]
-yl=ryn[index1+2] - ryn[index1+1]
-zl=yl/( 3- 4*yl/(xl+yl) )
-l3=ryn[index1+2]
-RN=[ryn[index1], ryn[index1+1], ryn[index1+2] ]
-for i in range(25):
-	xl=yl
-	yl=zl
-	l3=l3 + zl
-	RN.append(l3)
-	zl=yl/( 3- 4*yl/(xl+yl) )
-i=0
-yl=ryn[index1+1] - ryn[index1]
-zl=ryn[index1+2] - ryn[index1+1]
-xl=yl/( 3- 4*yl/(zl+yl) )
-l0=ryn[index1]
-for i in range(25):
-	zl=yl
-	yl=xl
-	l0=l0 - xl
-	RN.insert(0, l0)
-	xl=yl/( 3- 4*yl/(zl+yl) )
-#print('RIGHTTTTTTTTTTTTTTTTTTTTTTTT', RN)
-A=index-index1
-print(A)
-i=0
-if A>0:
-	for i in range(37):
-		cv2.line(imgcopy5, (0, int(LE[i-A])), (xmax, int(RN[i])), (55,25,210), 3)
-else:
-	for i in range(37):
-		cv2.line(imgcopy5, (0, int(LE[i-A])), (xmax, int(RN[i])), (55,25,210), 3)
-plt.imshow(imgcopy5), plt.title('Paralel lines to chesboard on all over the image'), plt.show()
+length=(1000/avel)*25
+width=(800/avele)*25
+top=(1000/aveu)*25
+right=(800/aver)*25
+print('length of bottom side is:', length, 'mm')
+print('length of top side is:', top, 'mm')
+print('length of left side is:', width, 'mm')
+print('length of right side is:', right, 'mm')
+print('surface area is :', top*width, 'mm2')
